@@ -70,21 +70,21 @@ export default async function EditarEmprendimientoPage({ params }: { params: Pro
               <Input name="web" defaultValue={(e?.redes as any)?.web || ""} />
             </div>
             <div>
-              <Label>Logo (archivo)</Label>
+              <Label>Logo </Label>
               <Input name="logo_file" type="file" accept="image/*" />
               <div className="text-xs text-muted-foreground mt-1">Actual dejar vacío para mantener URL existente</div>
             </div>
-            <div>
-              <Label>Logo (URL)</Label>
+            <div className="hidden">
+              <Label>Logo </Label>
               <Input name="logo_url" defaultValue={e?.logo_url || ""} />
             </div>
             <div>
-              <Label>Portada (archivo)</Label>
+              <Label>Portada </Label>
               <Input name="portada_file" type="file" accept="image/*" />
               <div className="text-xs text-muted-foreground mt-1">Dejar vacío para mantener URL existente</div>
             </div>
-            <div>
-              <Label>Portada (URL)</Label>
+            <div className="hidden">
+              <Label>Portada </Label>
               <Input name="portada_url" defaultValue={e?.portada_url || ""} />
             </div>
             <div className="md:col-span-2">

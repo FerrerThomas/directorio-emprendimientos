@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Building2, FolderOpen, Plus, Star } from "lucide-react"
 import Link from "next/link"
+import AdminFlash from "@/components/admin-flash"
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -16,6 +17,7 @@ export default async function AdminPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
+      <AdminFlash />
       <div className="grid gap-6 md:grid-cols-3 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -86,4 +88,3 @@ export default async function AdminPage() {
     </main>
   )
 }
-

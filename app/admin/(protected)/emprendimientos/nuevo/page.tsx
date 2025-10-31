@@ -66,20 +66,12 @@ export default async function NuevoEmprendimientoPage() {
               <Input name="web" placeholder="www.tusitio.com" />
             </div>
             <div>
-              <Label>Logo (archivo)</Label>
+              <Label>Logo</Label>
               <Input name="logo_file" type="file" accept="image/*" />
             </div>
             <div>
-              <Label>Logo (URL)</Label>
-              <Input name="logo_url" placeholder="https://..." />
-            </div>
-            <div>
-              <Label>Portada (archivo)</Label>
+              <Label>Portada</Label>
               <Input name="portada_file" type="file" accept="image/*" />
-            </div>
-            <div>
-              <Label>Portada (URL)</Label>
-              <Input name="portada_url" placeholder="https://..." />
             </div>
             <div className="md:col-span-2">
               <Label>Palabras clave (separadas por coma)</Label>

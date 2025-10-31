@@ -54,7 +54,7 @@ export function FeaturedCarousel({ businesses }: { businesses: Business[] }) {
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
               <div className="flex items-center gap-4 mb-3">
                 {currentBusiness.logo_url && (
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white bg-white">
+                  <div className="relative w-22 h-22 rounded-full overflow-hidden border-2 border-white bg-white">
                     <Image
                       src={currentBusiness.logo_url || "/placeholder.svg"}
                       alt={`${currentBusiness.nombre} logo`}

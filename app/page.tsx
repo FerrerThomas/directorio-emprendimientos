@@ -1,26 +1,17 @@
 import { createClient } from "@/lib/supabase/server"
 import { FeaturedCarousel } from "@/components/featured-carousel"
-import { SearchAndFilter } from "@/components/search-and-filter"
+import { BusinessCard } from "@/components/business-card"
 import Link from "next/link"
 
 export default async function HomePage() {
   const supabase = await createClient()
 
-  // Fetch featured businesses
+  // Featured businesses
   const { data: featured } = await supabase
     .from("emprendimientos")
     .select("*, categorias(nombre)")
     .eq("destacado", true)
     .order("created_at", { ascending: false })
-
-  // Fetch all businesses
-  const { data: businesses } = await supabase
-    .from("emprendimientos")
-    .select("*, categorias(nombre)")
-    .order("created_at", { ascending: false })
-
-  // Fetch all categories
-  const { data: categories } = await supabase.from("categorias").select("*").order("nombre")
 
   return (
     <div className="min-h-screen">
@@ -50,6 +41,24 @@ export default async function HomePage() {
       </header>
 
       <main>
+        {/* Search bar */}
+        <section className="bg-muted/30 py-10">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Encontrá emprendimientos</h2>
+            <form action="/buscar" method="get" className="flex gap-3">
+              <input
+                type="search"
+                name="q"
+                placeholder="Buscar por nombre, descripción o palabras clave"
+                className="flex-1 h-10 px-4 rounded-md border bg-background"
+              />
+              <button type="submit" className="h-10 px-6 rounded-md bg-primary text-primary-foreground font-medium">
+                Buscar
+              </button>
+            </form>
+          </div>
+        </section>
+
         {/* Featured Carousel */}
         {featured && featured.length > 0 && (
           <section className="bg-muted/30 py-8">
@@ -60,10 +69,17 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Search and Filter */}
-        <section className="container mx-auto px-4 py-8">
-          <SearchAndFilter categories={categories || []} initialBusinesses={businesses || []} />
-        </section>
+        {/* Featured grid */}
+        {featured && featured.length > 0 && (
+          <section className="container mx-auto px-4 py-8">
+            <h3 className="text-xl font-bold mb-4">Destacados</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featured.map((b) => (
+                <BusinessCard key={b.id} business={b as any} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Footer */}

@@ -1,5 +1,6 @@
 "use server"
 import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
 import { createClient as createServerClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -50,13 +51,8 @@ export async function createEmprendimiento(formData: FormData) {
 
   const logoFile = formData.get("logo_file")
   const portadaFile = formData.get("portada_file")
-  const logo_url_in = String(formData.get("logo_url") || "").trim()
-  const portada_url_in = String(formData.get("portada_url") || "").trim()
-
-  let logo_url = logo_url_in || null
-  let portada_url = portada_url_in || null
-  if (!logo_url && logoFile) logo_url = await uploadIfAny(logoFile, "logos")
-  if (!portada_url && portadaFile) portada_url = await uploadIfAny(portadaFile, "portadas")
+  let logo_url = await uploadIfAny(logoFile, "logos")
+  let portada_url = await uploadIfAny(portadaFile, "portadas")
 
   const admin = createAdminClient()
   const supabase = admin ?? await createServerClient()
@@ -75,9 +71,11 @@ export async function createEmprendimiento(formData: FormData) {
       palabras_clave,
     },
   ])
-  if (error) return { ok: false, message: error.message }
+  if (error) {
+    redirect(`/admin?error=${encodeURIComponent(error.message)}`)
+  }
   revalidatePath("/admin/emprendimientos")
-  return { ok: true }
+  redirect(`/admin?flash=${encodeURIComponent("Emprendimiento creado")}`)
 }
 
 export async function updateEmprendimiento(id: string, formData: FormData) {
@@ -94,17 +92,13 @@ export async function updateEmprendimiento(id: string, formData: FormData) {
 
   const logoFile = formData.get("logo_file")
   const portadaFile = formData.get("portada_file")
-  const logo_url_in = String(formData.get("logo_url") || "").trim()
-  const portada_url_in = String(formData.get("portada_url") || "").trim()
-
-  let logo_url = logo_url_in || null
-  let portada_url = portada_url_in || null
-  if (!logo_url && logoFile) logo_url = await uploadIfAny(logoFile, "logos")
-  if (!portada_url && portadaFile) portada_url = await uploadIfAny(portadaFile, "portadas")
+  let logo_url = await uploadIfAny(logoFile, "logos")
+  let portada_url = await uploadIfAny(portadaFile, "portadas")
 
   const admin = createAdminClient()
   const supabase = admin ?? await createServerClient()
-  const { error } = await supabase.from("emprendimientos").update({
+
+  const payload: Record<string, any> = {
     nombre,
     descripcion_corta,
     descripcion_larga: descripcion_larga || null,
@@ -112,15 +106,19 @@ export async function updateEmprendimiento(id: string, formData: FormData) {
     telefono,
     direccion,
     redes,
-    logo_url,
-    portada_url,
     destacado,
     palabras_clave,
-  }).eq("id", id)
-  if (error) return { ok: false, message: error.message }
+  }
+  if (logo_url) payload.logo_url = logo_url
+  if (portada_url) payload.portada_url = portada_url
+
+  const { error } = await supabase.from("emprendimientos").update(payload).eq("id", id)
+  if (error) {
+    redirect(`/admin?error=${encodeURIComponent(error.message)}`)
+  }
   revalidatePath(`/admin/emprendimientos/${id}/editar`)
   revalidatePath("/admin/emprendimientos")
-  return { ok: true }
+  redirect(`/admin?flash=${encodeURIComponent("Emprendimiento actualizado")}`)
 }
 
 export async function deleteEmprendimiento(id: string) {

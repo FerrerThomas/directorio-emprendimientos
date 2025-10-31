@@ -26,7 +26,7 @@ export function BusinessCard({ business }: { business: Business }) {
         </div>
         <CardHeader className="relative pb-2">
           {business.logo_url && (
-            <div className="absolute -top-8 left-4 w-16 h-16 rounded-full overflow-hidden border-4 border-card bg-card">
+            <div className="absolute -top-9 left-4 w-[86px] h-[86px] rounded-full overflow-hidden border-4 border-card bg-card">
               <Image
                 src={business.logo_url || "/placeholder.svg"}
                 alt={`${business.nombre} logo`}
@@ -35,7 +35,7 @@ export function BusinessCard({ business }: { business: Business }) {
               />
             </div>
           )}
-          <div className={business.logo_url ? "pt-10" : ""}>
+          <div className={business.logo_url ? "pt-12" : ""}>
             <h3 className="font-bold text-lg text-balance">{business.nombre}</h3>
             {business.categorias && (
               <Badge variant="secondary" className="mt-2">
