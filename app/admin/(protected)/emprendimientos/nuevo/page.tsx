@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { createEmprendimiento } from "../../../emprendimientos/actions"
+import { AdminNav } from "@/components/admin-nav"
 
 export default async function NuevoEmprendimientoPage() {
   const supabase = await createClient()
@@ -13,6 +14,7 @@ export default async function NuevoEmprendimientoPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
+      <AdminNav />
       <Card>
         <CardHeader>
           <CardTitle>Nuevo Emprendimiento</CardTitle>

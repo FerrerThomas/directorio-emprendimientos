@@ -1,17 +1,18 @@
 import { createClient } from "@/lib/supabase/server"
 import { BusinessCard } from "@/components/business-card"
 import Link from "next/link"
-
-export default async function BuscarPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const { q: _q = "" } = await searchParams
+export default async function BuscarPage({ searchParams }: { searchParams: Promise<{ q?: string; categoria?: string }> }) {
+  const { q: _q = "", categoria } = await searchParams
   const q = _q.trim()
   const supabase = await createClient()
-  const { data: raw } = await supabase
+  let query = supabase
     .from("emprendimientos")
     .select("*, categorias(nombre)")
     .order("created_at", { ascending: false })
-    .limit(500)
-
+  if (categoria) {
+      query = query.eq("categoria_id", categoria)
+    }
+    const { data: raw } = await query.limit(500)
   const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase()
   const needle = norm(q)
   const results = (raw || []).filter((b: any) => {
@@ -40,6 +41,9 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
             placeholder="Buscar por nombre, descripción o palabras clave"
             className="flex-1 h-10 px-4 rounded-md border bg-background"
           />
+          {categoria && (
+            <input type="hidden" name="categoria" value={categoria} />
+          )}
           <button type="submit" className="h-10 px-6 rounded-md bg-primary text-primary-foreground font-medium">
             Buscar
           </button>

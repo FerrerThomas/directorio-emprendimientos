@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
+import { AdminNav } from "@/components/admin-nav"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -29,6 +30,7 @@ export default async function EmprendimientosListPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
+      <AdminNav />
       <Card>
         <CardHeader className="flex items-center justify-between">
           <CardTitle>Emprendimientos</CardTitle>
@@ -69,4 +71,3 @@ export default async function EmprendimientosListPage() {
     </main>
   )
 }
-

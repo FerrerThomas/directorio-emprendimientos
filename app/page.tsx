@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { FeaturedCarousel } from "@/components/featured-carousel"
 import { BusinessCard } from "@/components/business-card"
 import Link from "next/link"
+import * as Lucide from "lucide-react"
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -57,6 +58,50 @@ export default async function HomePage() {
               </button>
             </form>
           </div>
+        </section>
+
+        {/* Category index */}
+        <section className="container mx-auto px-4 py-8">
+          <h3 className="text-xl font-bold mb-4">Explorar por categoría</h3>
+          {/* Fetch categories inline to keep homepage cohesive */}
+          {async function CategoriesGrid() {
+            const sb = await createClient()
+            const { data: categorias } = await sb.from("categorias").select("id, nombre, icon").order("nombre")
+            const toPascal = (s: string) => s.split(/[-_\s]+/).map((p) => p ? p[0].toUpperCase() + p.slice(1) : "").join("")
+            const fallbackByName = (name: string) => {
+              const n = name.toLowerCase()
+              if (n.includes("gastr")) return (Lucide as any).Utensils
+              if (n.includes("hogar") || n.includes("plom")) return (Lucide as any).Wrench
+              if (n.includes("salud") || n.includes("bienestar")) return (Lucide as any).HeartPulse
+              if (n.includes("educ")) return (Lucide as any).BookOpen
+              if (n.includes("tecno")) return (Lucide as any).Laptop
+              if (n.includes("belleza")) return (Lucide as any).Sparkles
+              return (Lucide as any).Folder
+            }
+            const pickIcon = (nombre: string, icon?: string | null) => {
+              if (icon) {
+                const key = toPascal(icon.trim())
+                const Comp = (Lucide as any)[key]
+                if (Comp) return Comp
+              }
+              return fallbackByName(nombre)
+            }
+            return (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                {(categorias || []).map((c) => {
+                  const Icon = pickIcon(c.nombre, (c as any).icon)
+                  return (
+                    <Link key={c.id} href={`/buscar?categoria=${c.id}`} className="group">
+                      <div className="flex items-center gap-2 rounded-md border bg-card px-3 py-2 hover:bg-accent hover:text-accent-foreground transition-colors">
+                        <Icon className="h-4 w-4 opacity-80" />
+                        <span className="text-sm font-medium text-balance">{c.nombre}</span>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            )
+          }()}
         </section>
 
         {/* Featured Carousel */}

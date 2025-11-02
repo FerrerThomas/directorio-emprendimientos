@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { updateEmprendimiento } from "../../../../emprendimientos/actions"
+import { AdminNav } from "@/components/admin-nav"
 
 export default async function EditarEmprendimientoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -17,6 +18,7 @@ export default async function EditarEmprendimientoPage({ params }: { params: Pro
 
   return (
     <main className="container mx-auto px-4 py-8">
+      <AdminNav />
       <Card>
         <CardHeader>
           <CardTitle>Editar Emprendimiento</CardTitle>
